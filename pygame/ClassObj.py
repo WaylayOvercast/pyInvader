@@ -77,8 +77,6 @@ class Ship:
         return self.ship_img.get_height()
 
 
-
-
 class Player(Ship):
     def __init__(self, x, y, health=100):
         super().__init__(x, y, health)
@@ -88,6 +86,7 @@ class Player(Ship):
         self.laser_img = Assets.YELLOW_LASER
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
+        self.score = 0
 
     def move_lasers(self, vel, objs):
         self.cooldown()
@@ -99,6 +98,7 @@ class Player(Ship):
                 for obj in objs:
                     if laser.collision(obj):
                         objs.remove(obj)
+                        self.score += 80
                         if laser in self.lasers:
                             self.lasers.remove(laser)
 
@@ -112,8 +112,6 @@ class Player(Ship):
     def healthbar(self, window):
         pygame.draw.rect(window, (255,0,0), (0,Assets.WINDOW_SIZE[1]-20,Assets.WINDOW_SIZE[0], 20)) # both need work
         pygame.draw.rect(window, (0,255,0), (0, Assets.WINDOW_SIZE[1]-20, Assets.WINDOW_SIZE[0] * (self.health / self.max_health), 20)) 
-
-
 
 
 class Enemy(Ship):
@@ -135,8 +133,6 @@ class Enemy(Ship):
             laser = Laser((self.x - self.laser_img.get_width()/2) + self.ship_img.get_width()/2 , self.y, self.laser_img) #WINDOW_SIZE[0]/2 - lost_label.get_width()/2 needs to be centered
             self.lasers.append(laser)
             self.cool_down = 1
-
-
 
 
 class Health:

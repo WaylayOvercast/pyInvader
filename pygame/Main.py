@@ -9,7 +9,7 @@ import Function
 
 
 WIN = pygame.display.set_mode((Assets.WINDOW_SIZE))
-pygame.display.set_caption("WIP V0.02")
+pygame.display.set_caption("WIP V0.04")
 
 def main():
     run = True
@@ -31,11 +31,12 @@ def main():
         WIN.blit(Assets.MAP, (0,0)) #  map
 
         #   text and UI
+        score_label = Assets.main_font.render(f"Score: {player.score}", 1, (255,255,255))
         lives_label = Assets.main_font.render(f"Lives: {lives}", 1, (255,255,255))
         level_label = Assets.main_font.render(f"Level: {level}", 1, (255,255,255))
         WIN.blit(lives_label, (10,10))
         WIN.blit(level_label, (10,50))
-
+        WIN.blit(score_label, (10,130))
         player.draw(WIN)
 
         for health in health_containers:
@@ -64,16 +65,20 @@ def main():
                 enemy = ClassObj.Enemy(random.randrange(100, Assets.WINDOW_SIZE[0]-100), random.randrange(-1500, -100), random.choice(['red','blue','green']))
                 enemies.append(enemy)
 
-                if wave_length > 5 : #and random.random() < 1
+                if wave_length > 11 and random.randint(0, 100) < 15: #and random.random() < 1
                     health = ClassObj.Health(random.randrange(100, Assets.WINDOW_SIZE[0]-100), random.randrange(-1500, -100))
                     health_containers.append(health)
 
         for health in health_containers[:]:
-            health.move(enemy_vel)                  #       health container movement also, generation above ^
+            health.move(enemy_vel)                  #       health container movement, generation above ^
       
-            if Function.collide(player, health) and player.health <= 50:
-                player.health += 50
-                health_containers.remove(health)
+            if Function.collide(player, health):
+                if player.health <= 50: 
+                    player.health += 50
+                    health_containers.remove(health)
+                elif(player.health <= 99):
+                    player.health = 100
+                    health_containers.remove(health)
 
             elif health.y + health.get_height() > Assets.WINDOW_SIZE[1]:
                 health_containers.remove(health)
@@ -116,6 +121,7 @@ def main():
             if Function.collide(enemy, player):
                 player.health -= 10
                 enemies.remove(enemy)
+                player.score += 80
 
             elif enemy.y + enemy.get_height() > Assets.WINDOW_SIZE[1]:
                 lives -= 1
