@@ -61,13 +61,16 @@ def main():
             if lives < 5:
                 lives += 1
             wave_length += 3
+            if random.randint(0, 1000) * wave_length > 2000:
+                health = ClassObj.Health(random.randrange(100, Assets.WINDOW_SIZE[0]-100), random.randrange(-1500, -100))
+                health_containers.append(health)
+
             for i in range(wave_length):
                 enemy = ClassObj.Enemy(random.randrange(100, Assets.WINDOW_SIZE[0]-100), random.randrange(-1500, -100), random.choice(['red','blue','green']))
                 enemies.append(enemy)
 
-                if wave_length > 11 and random.randint(0, 100) < 15: #and random.random() < 1
-                    health = ClassObj.Health(random.randrange(100, Assets.WINDOW_SIZE[0]-100), random.randrange(-1500, -100))
-                    health_containers.append(health)
+                #if wave_length > 11 and random.randint(0, 1000) < 15: #and random.random() < 1 OLD health canister generation
+                    
 
         for health in health_containers[:]:
             health.move(enemy_vel)                  #       health container movement, generation above ^
